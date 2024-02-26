@@ -20,7 +20,16 @@ import config
 
 
 def stoppingCriterion(model_id, hf_auth_token):
-  
+    """
+    Create a stopping criterion for model generation based on specific tokens.
+
+    Args:
+        model_id (str): Model identifier.
+        hf_auth_token (str): Hugging Face authentication token.
+
+    Returns:
+        StoppingCriteriaList: List of stopping criteria for model generation.
+    """
 
     class StopOnTokens(StoppingCriteria):
         def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
@@ -50,6 +59,13 @@ def stoppingCriterion(model_id, hf_auth_token):
 
 
 def database(store_dir_path):
+  """
+    Loads Created Chroma Vector Store.
+    Args:
+        store_dir_path (str): Path to the directory to persist the vector store.
+    Returns:
+        Chroma: The Chroma vector store.
+  """
  
   hf_embedding = HuggingFaceInstructEmbeddings()
   db = Chroma(persist_directory=store_dir_path, embedding_function=hf_embedding)
@@ -58,6 +74,16 @@ def database(store_dir_path):
 
 
 def getModel(model_id, hf_auth_token):
+    """
+      Retrieves a pre-trained language model (LLAMA 2-7B-chat-hf).
+
+      Args:
+          model_id (str): The model identifier.
+          hf_auth_token (str): The Hugging Face authentication token.
+
+      Returns:
+          HuggingFacePipeline: The pre-trained language model.
+    """
    
     model_config = transformers.AutoConfig.from_pretrained(
         model_id,
@@ -101,7 +127,19 @@ def getModel(model_id, hf_auth_token):
     return llm
 
 
-def generate_response(txt,llm , db, choice='txt', incontext_learning=True):
+def generate_response(txt,llm , db, incontext_learning=True):
+    """
+    Generates a response based on input text and pre-trained language models.
+
+    Args:
+        txt (str): Input text.
+        llm (HuggingFacePipeline): Pre-trained language model.
+        db (Chroma): Chroma vector store.
+        rag (bool, optional): Whether to use Retrieval Augmented Generation (RAG). Defaults to True.
+
+    Returns:
+        str: Generated response.
+    """
    
     if incontext_learning == True:
         

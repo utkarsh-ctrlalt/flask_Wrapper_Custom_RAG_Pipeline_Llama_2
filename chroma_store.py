@@ -3,32 +3,40 @@ from langchain.document_loaders import PyPDFLoader
 from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import config
+from pathlib import Path
+import os
+
+# Define the path of the current file and its root directory
+FILE = Path(__file__).resolve()
+ROOT = FILE.parents[0]
+
 
 if __name__ == "__main__":
 
+    # Initialize a RecursiveCharacterTextSplitter object with specified parameters in config.py
     text_splitter = RecursiveCharacterTextSplitter(
-        # Set a really small chunk size, just to show.
         chunk_size=config.TEXT_SPLITTER_CHUNK,
         chunk_overlap=config.TEXT_CHUNK_OVERLAP,
         length_function=len,
     )
 
-    web_link = "/home/usingh4/Desktop/llm_2/ConceptsofBiology-WEB.pdf"
+    # Define the path or web link to the PDF document
+    web_link = os.path.join(ROOT, "ConceptsofBiology-WEB.pdf" )
+    # Initialize a PyPDFLoader object with the PDF document path or link
     loader = PyPDFLoader(web_link)
+    # Load and split the PDF document into pages using the specified text splitter
     pages = loader.load_and_split(text_splitter=text_splitter)
-    print(pages[2000])
+    # print(type(pages))
 
+    # Initialize a HuggingFaceInstructEmbeddings object
+    hf_embedding = HuggingFaceInstructEmbeddings()
 
+    # Inform about the start of the process.
+    print('starting creating persistant vector store')
+    # Create a Chroma vector store from the loaded document pages using Hugging Face intruct embeddings model.
+    db = Chroma.from_documents(pages, hf_embedding,  persist_directory="./chroma_db")
+    # Persist the created vector store.
+    db.persist()
 
-    
-
-
-
-    # hf_embedding = HuggingFaceInstructEmbeddings()
-
-    # print('starting creating persistant vector store')
-    # db = Chroma.from_documents(pages, hf_embedding,  persist_directory="./chroma_db")
-    # db.persist()
-
-
-    # print("Done")
+    # Inform about the completion of the process.
+    print("Done")

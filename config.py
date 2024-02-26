@@ -4,9 +4,6 @@ from pathlib import Path
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]
 
-
-
-
 hf_token = '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'
 # Uncomment the below line if you have locally downloaded Llama-2-7b-chat-hf LLM model.
 #summerizer_model_id = os.path.join(ROOT, "Llama-2-7b-chat-hf")
