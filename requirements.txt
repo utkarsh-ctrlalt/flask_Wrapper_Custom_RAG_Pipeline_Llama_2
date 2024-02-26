@@ -1,0 +1,12 @@
+langchain==0.0.275 
+transformers==4.33.1 
+streamlit==1.27.0 
+pypdf==4.0.2 
+InstructorEmbedding==1.0.1 
+sentence-transformers==2.2.2 
+chromadb==0.4.8 
+bitsandbytes==0.41.1 
+accelerate==0.22.0
+bs4==0.0.1
+Flask==3.0.2
+gunicorn==21.2.0
